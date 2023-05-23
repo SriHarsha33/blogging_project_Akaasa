@@ -10,14 +10,13 @@ let alert = require('alert');
 // mongoose.connect("mongodb://localhost:27017/scheduler");
 // var conn = mongoose.connection;
 
-
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
 var con = mysql.createConnection({
-    host: "host",
+    host: "localhost",
     user: "username",
     password: "password",
     database: "blogging_platform"
@@ -26,15 +25,15 @@ var con = mysql.createConnection({
 con.connect(function(err){
     if(err) throw err;
 });
-//To create a table SQL Command: CREATE TABLE users (Name varchar(255), EmailId varchar(255), MobileNumber varchar(255), Password varchar(255));
+//To create a table SQL Command: CREATE TABLE users (Id varchar(255), Name varchar(255), EmailId varchar(255), MobileNumber varchar(255), Password varchar(255));
 
-let email, name, mobile_num;
+let email, name, mobile_num, id;
 
 app.post("/", function(req, res){
     email = req.body.emailId;
     let password = req.body.password;
   
-    var sql = 'SELECT Password, Name, MobileNumber FROM users WHERE EmailId = ?';
+    var sql = 'SELECT Password, Name, MobileNumber, Id FROM users WHERE EmailId = ?';
     con.query(sql, [email], function (err, result) {
         if (err) throw err;
         if(result.length==0){
@@ -44,6 +43,7 @@ app.post("/", function(req, res){
         else{
           name=result[0].Name;
           mobile_num=result[0].MobileNumber;
+          id = result[0].Id;
           if(result[0].Password === password)
             res.render("dashboard", {title: name});
           else {
@@ -61,17 +61,55 @@ app.post("/register", function(req, res){
     let newMobile_Num = req.body.number;
     let newEmail = req.body.emailId;
     let newPassword = req.body.password;
+    let newID = Date.now().toString();
     
-    var sql = "INSERT INTO `users` VALUES(?, ?, ?, ?)";
-    con.query(sql, [newName, newEmail, newMobile_Num, newPassword], function(err, result){
+    var sql = "INSERT INTO `users` VALUES(?, ?, ?, ?, ?)";
+    con.query(sql, [newID, newName, newEmail, newMobile_Num, newPassword], function(err, result){
        if(err) throw err;
     })
     res.render("welcome", {route: "/register"});
 })
 
+app.post("/profile", function(req, res){
+    name = req.body.name;
+    email= req.body.email;
+    mobile_num=req.body.number;
+    var sql = 'UPDATE users SET Name = ?, EmailId = ?, MobileNumber = ?  WHERE Id = ?';
+    con.query(sql, [name, email, mobile_num, id], function (err, result) {
+      if (err) throw err;
+    });
+
+  res.render("profile", {title: name, name:name, email:email, num: mobile_num});
+})
+
+app.post("/updatePassword", function(req, res){
+    let oldPswd = req.body.oldPswd;
+    let newPswd = req.body.newPswd;
+    var sql = 'UPDATE users SET Password = ? WHERE Id = ?';
+    con.query(sql, [newPswd, id], function (err, result) {
+        if (err) throw err;
+    });
+    res.redirect("/profile");
+})
+
+
+
 app.get("/", function(req, res){
     res.render("welcome", {route: "/register"});
 })
+
+app.get("/dashboard", function(req, res){
+    res.render("dashboard", {title: name});
+})
+
+app.get("/profile", function(req, res){
+    res.render("profile", {title: name, name:name, email:email, num: mobile_num});
+})
+
+app.get("/updatePassword", function(req, res){
+    res.render("updatePassword", {title: name, name: name});
+})
+
 
 app.listen(process.env.PORT || 3000, function(req, res){
 	console.log("Server is running on port 3000");
