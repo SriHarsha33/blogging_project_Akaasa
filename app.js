@@ -5,10 +5,18 @@ const mysql = require('mysql');
 const ejs = require("ejs");
 const _ = require("lodash");
 let alert = require('alert');
-// var MongoClient = require('mongodb').MongoClient;
-// const mongoose = require('mongoose');
-// mongoose.connect("mongodb://localhost:27017/scheduler");
-// var conn = mongoose.connection;
+var MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost:27017/blogging_platform");
+var conn = mongoose.connection;
+
+const blogSchema = new mongoose.Schema({
+    heading: String,
+    body: String,
+    name: String
+  });
+  
+const blogs = mongoose.model("blog", blogSchema);
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -92,6 +100,19 @@ app.post("/updatePassword", function(req, res){
     res.redirect("/profile");
 })
 
+app.post("/writeBlog", function(req, res){
+    let heading = req.body.heading;
+    let body = req.body.body;
+
+    const blog = new blogs({
+        heading: heading,
+        body: body,
+        name: name
+    });
+    blog.save();
+    res.render("dashboard", {title: name});
+
+})
 
 
 app.get("/", function(req, res){
@@ -108,6 +129,10 @@ app.get("/profile", function(req, res){
 
 app.get("/updatePassword", function(req, res){
     res.render("updatePassword", {title: name, name: name});
+})
+
+app.get("/writeBlog", function(req, res){
+    res.render("writeBlog", {title: name});
 })
 
 
