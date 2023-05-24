@@ -1,2 +1,20 @@
 <%- include("partials/header"); -%>
 
+<link href="css/editBlogs.css" rel="stylesheet">
+
+<div class="compose">
+    <form action="/writeBlog" method="POST">
+<% blogs.forEach(function(blog){ %>
+    
+    <div class="form-group">
+    <label>Title:</label>
+    <input class="form-control" type="text" name="heading" value="<%= blog.heading %>">
+
+    <label>Post:</label>
+    <textarea class="form-control" name="body" rows="15" cols="30"><%= blog.body %></textarea>
+
+</div>
+<% }) %>
+<input class="btn btn-primary" type="submit" name="button" value="Save">
+</form>
+</div>

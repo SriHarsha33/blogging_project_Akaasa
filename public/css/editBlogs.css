@@ -1,7 +1,6 @@
 .compose{
     margin-top: 5%;
     margin-left: 20%;
-    margin-bottom: 10px;
 }
 
 input[type="text"]{
@@ -29,4 +28,8 @@ input[type="submit"] {
 
   label{
     font-weight: bold;
+  }
+
+  .form-group{
+    margin-top: 5%;
   }

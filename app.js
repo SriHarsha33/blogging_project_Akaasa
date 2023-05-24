@@ -25,8 +25,8 @@ app.use(express.static("public"));
 
 var con = mysql.createConnection({
     host: "localhost",
-    user: "username",
-    password: "password",
+    user: "root",
+    password: "sGaDsB60!?",
     database: "blogging_platform"
 });
 
@@ -154,6 +154,13 @@ app.get("/viewBlogs", function(req, res){
     blogs.find({name:name}).then((result)=>{
         result.reverse();
         res.render("viewBlogs", {title: name, blogs:result});
+    });
+})
+
+app.get("/editBlogs", function(req, res){
+    blogs.find({name:name}).then((result)=>{
+        result.reverse();
+        res.render("editBlogs", {title: name, blogs:result});
     });
 })
 

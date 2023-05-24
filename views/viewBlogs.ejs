@@ -1,10 +1,15 @@
 <%- include("partials/header"); -%>
 
 <link rel="stylesheet" href="css/dashboard.css">
+
+<h1>Blogs</h1>
 <div class="blog-page"></div>
 <% blogs.forEach(function(blog){ %>
     <div class="blog-heading"><h1><%= blog.heading %></h1></div>
     <div class="blog-body"><p><%= blog.body %></p></div>
     <div class="label"><p>~ <%= blog.name %></p></div>
+    <!-- <div>
+        <a href="/editBlogs"><button type="button" name="edit">Edit</button></a>
+    </div> -->
 <% }) %>
 </div> 
