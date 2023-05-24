@@ -1,0 +1,19 @@
+.blog-heading{
+    position: relative;
+    left: 10%;
+}
+
+.blog-body{
+    position: relative;
+    left: 10%;
+}
+
+.label{
+    position: relative;
+    left: 10%;
+    margin-bottom: 10px;
+}
+
+.blog-page{
+    margin-top: 6%;
+}

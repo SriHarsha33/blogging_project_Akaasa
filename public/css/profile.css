@@ -1,0 +1,63 @@
+/* body {
+      background-color: #F0FFFF;
+      font-family: Arial, sans-serif; */
+      /* background-image: url("https://qph.cf2.quoracdn.net/main-qimg-9258007b05b588c7aa9c534108c6b25e-lq"); */
+      /* background-repeat: no-repeat;
+      background-size:cover;
+      background-position:center;
+    } */
+    form {
+        /* margin: 20px; */
+  
+      }
+      .navbar-brand{
+        color: white;
+        font-size: 28px;
+        font-display: auto;
+        text-align: left;
+        position: relative;
+        left: 2%;
+      }
+      h1{
+        color: aliceblue;
+      }
+      label {
+        display: block;
+        font-weight: bold;
+        margin-top: 10px;
+        color: black;
+      }
+      input[type="text"], input[type="email"], input[type="password"] {
+        padding: 5px;
+        font-size: 20px;
+        width: 50%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+      }
+      input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+      button{
+        background-color: #800080;
+        color: white;
+        padding: 5px 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+.profile1{
+  margin-left: 20%;
+  margin-top: 5%;
+}  

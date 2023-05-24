@@ -35,7 +35,8 @@ con.connect(function(err){
 });
 //To create a table SQL Command: CREATE TABLE users (Id varchar(255), Name varchar(255), EmailId varchar(255), MobileNumber varchar(255), Password varchar(255));
 
-let email, name, mobile_num, id;
+let email, name, mobile_num, id, Blogs = [];
+
 
 app.post("/", function(req, res){
     email = req.body.emailId;
@@ -52,8 +53,12 @@ app.post("/", function(req, res){
           name=result[0].Name;
           mobile_num=result[0].MobileNumber;
           id = result[0].Id;
-          if(result[0].Password === password)
-            res.render("dashboard", {title: name});
+          if(result[0].Password === password){
+            blogs.find().then((result)=>{
+                result.reverse();
+                res.render("dashboard", {title: name, blogs:result});
+            });
+          }
           else {
             alert("Wrong Password!");
             res.render("welcome", {route: "/register"});
@@ -61,6 +66,8 @@ app.post("/", function(req, res){
         }
         
       });
+
+    
   
 })
 
@@ -110,9 +117,14 @@ app.post("/writeBlog", function(req, res){
         name: name
     });
     blog.save();
-    res.render("dashboard", {title: name});
+
+    blogs.find().then((result)=>{
+        result.reverse();
+        res.render("dashboard", {title: name, blogs:result});
+    });
 
 })
+
 
 
 app.get("/", function(req, res){
@@ -120,7 +132,10 @@ app.get("/", function(req, res){
 })
 
 app.get("/dashboard", function(req, res){
-    res.render("dashboard", {title: name});
+    blogs.find().then((result)=>{
+        result.reverse();
+        res.render("dashboard", {title: name, blogs:result});
+    });
 })
 
 app.get("/profile", function(req, res){
@@ -133,6 +148,13 @@ app.get("/updatePassword", function(req, res){
 
 app.get("/writeBlog", function(req, res){
     res.render("writeBlog", {title: name});
+})
+
+app.get("/viewBlogs", function(req, res){
+    blogs.find({name:name}).then((result)=>{
+        result.reverse();
+        res.render("viewBlogs", {title: name, blogs:result});
+    });
 })
 
 

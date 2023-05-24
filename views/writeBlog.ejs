@@ -1,0 +1,15 @@
+<%- include("partials/header") -%>
+
+<link rel="stylesheet" href="css/writeBlog.css">
+<h1>Compose</h1>
+<div class="compose">
+    <form action="/writeBlog" method="POST">
+        <div class="form-group">
+            <label>Title:</label>
+            <input class="form-control" type="text" name="heading">
+            <label>Post:</label>
+            <textarea class="form-control" name="body" rows="15" cols="30"></textarea>
+        </div>
+        <input class="btn btn-primary" type="submit" name="button" value="Publish">
+    </form>
+</div>

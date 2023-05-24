@@ -1,0 +1,31 @@
+.compose{
+    margin-top: 5%;
+    margin-left: 20%;
+}
+
+input[type="text"]{
+    padding: 5px;
+    font-size: 20px;
+    width: 80%;
+}
+
+.form-control{
+    width: 80%;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  label{
+    font-weight: bold;
+  }

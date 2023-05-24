@@ -1,0 +1,24 @@
+<%- include("partials/header"); -%>
+
+<link rel="stylesheet" href="css/dashboard.css">
+<!-- <div class="blog-page">
+<% blogs.forEach(function(blog){ %>
+   
+        <div class="blog">
+            <div class="blog-heading"><h1><%= blog.heading %></h1></div>
+            <div class="blog-body"><p><%= blog.body %></p></div>
+            <div class="label"><p>~ <%= blog.name %></p></div>
+        </div>
+
+<% }) %>
+</div> -->
+
+<div class="blog-page"></div>
+<% blogs.forEach(function(blog){ %>
+    <div class="blog-heading"><h1><%= blog.heading %></h1></div>
+    <div class="blog-body"><p><%= blog.body %></p></div>
+    <div class="label"><p>~ <%= blog.name %></p></div>
+<% }) %>
+</div> 
+
+
