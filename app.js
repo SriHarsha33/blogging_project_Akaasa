@@ -8,7 +8,7 @@ let alert = require('alert');
 var MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/blogging_platform");
-var conn = mongoose.connection;
+// var conn = mongoose.connection;
 
 const blogSchema = new mongoose.Schema({
     heading: String,
@@ -26,7 +26,7 @@ app.use(express.static("public"));
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "sGaDsB60!?",
+    password: "#######",
     database: "blogging_platform"
 });
 
@@ -100,11 +100,23 @@ app.post("/profile", function(req, res){
 app.post("/updatePassword", function(req, res){
     let oldPswd = req.body.oldPswd;
     let newPswd = req.body.newPswd;
-    var sql = 'UPDATE users SET Password = ? WHERE Id = ?';
-    con.query(sql, [newPswd, id], function (err, result) {
+    let flag = 0;
+    var sql = 'select Name from users where Password = ?';
+    con.query(sql, [oldPswd], function (err, result) {
         if (err) throw err;
+        if (result === null) {
+            alert("old password is incorrect");
+            flag = 1;
+            res.render("updatePassword", {title: name, name: name});
+        }
     });
-    res.redirect("/profile");
+    if(!flag){
+        var sql = 'UPDATE users SET Password = ? WHERE Id = ?';
+        con.query(sql, [newPswd, id], function (err, result) {
+            if (err) throw err;
+        });
+        res.redirect("/profile");
+    }
 })
 
 app.post("/writeBlog", function(req, res){
