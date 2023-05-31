@@ -114,7 +114,6 @@
   } */
 
 
-
   html, body {
     height: 100%;
     background-color: #CBE4DE;
@@ -137,17 +136,35 @@
     width: 5%;
     margin-left: 5%;
     margin-top: 10px;
+    width: 50px;
     color: whitesmoke;
   }
 
   .profile{
-    /* margin-left: 75%;
-    margin-top: 13px; */
+    margin-left: 75%;
+    margin-top: 0px;
     position: absolute;
     height: 12px;
     left: 10%;
     top: 23px;
     color: #2E4F4F;
+  }
+
+  .dropdown{
+    position: relative;
+    bottom: 10px;
+  }
+
+  .title{
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+
+  h3{
+    margin-bottom: 0px;
+    margin-left: 5%;
+    margin-top: 10px;
+    
   }
 
   .blog{
@@ -183,7 +200,7 @@
   .log-out{
     position: absolute;
     height: 16px;
-    left: 93%;
+    left: 92%;
     top: 23px;
     font-family: 'Roboto';
     font-style: normal;
@@ -198,7 +215,7 @@
     text-decoration: none;
   }
 
-  .user:hover{
+  .title:hover{
     color: #FFFFFF;
     text-decoration: none;
   }

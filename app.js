@@ -7,7 +7,6 @@ const _ = require("lodash");
 let alert = require('alert');
 const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/blogging_platform");
-// var conn = mongoose.connection;
 
 const blogSchema = new mongoose.Schema({
     heading: String,
@@ -25,7 +24,7 @@ app.use(express.static("public"));
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "#######",
+    password: "",
     database: "blogging_platform"
 });
 
@@ -85,6 +84,7 @@ app.post("/register", function(req, res){
 })
 
 app.post("/profile", function(req, res){
+    let oldName = name;
     name = req.body.name;
     email= req.body.email;
     mobile_num=req.body.number;
@@ -93,6 +93,12 @@ app.post("/profile", function(req, res){
       if (err) throw err;
     });
 
+    blogs.updateMany(
+        {name: oldName},
+        {$set: {name: name}}
+    ).then((result)=>{
+
+    })
   res.render("profile", {title: name, name:name, email:email, num: mobile_num});
 })
 
