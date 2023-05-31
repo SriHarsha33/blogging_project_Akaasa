@@ -5,7 +5,6 @@ const mysql = require('mysql');
 const ejs = require("ejs");
 const _ = require("lodash");
 let alert = require('alert');
-var MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/blogging_platform");
 // var conn = mongoose.connection;
@@ -100,23 +99,22 @@ app.post("/profile", function(req, res){
 app.post("/updatePassword", function(req, res){
     let oldPswd = req.body.oldPswd;
     let newPswd = req.body.newPswd;
-    let flag = 0;
-    var sql = 'select Name from users where Password = ?';
-    con.query(sql, [oldPswd], function (err, result) {
+
+    var sql1 = `SELECT Name from users WHERE Password = ?`;
+    con.query(sql1, [oldPswd], function (err, result1) {
         if (err) throw err;
-        if (result === null) {
-            alert("old password is incorrect");
-            flag = 1;
+        if(result1.length === 0){
+            alert("Old Password is incorrect, check once.");
             res.render("updatePassword", {title: name, name: name});
         }
+        else{
+            var sql2 = 'UPDATE users SET Password = ? WHERE Id = ?';
+            con.query(sql2, [newPswd, id], function (err, result) {
+                if (err) throw err;
+            });
+            res.redirect("/profile");
+        }
     });
-    if(!flag){
-        var sql = 'UPDATE users SET Password = ? WHERE Id = ?';
-        con.query(sql, [newPswd, id], function (err, result) {
-            if (err) throw err;
-        });
-        res.redirect("/profile");
-    }
 })
 
 app.post("/writeBlog", function(req, res){

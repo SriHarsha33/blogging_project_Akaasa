@@ -141,8 +141,12 @@
   }
 
   .profile{
-    margin-left: 75%;
-    margin-top: 13px;
+    /* margin-left: 75%;
+    margin-top: 13px; */
+    position: absolute;
+    height: 12px;
+    left: 10%;
+    top: 23px;
     color: #2E4F4F;
   }
 
