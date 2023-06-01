@@ -6,13 +6,13 @@
 <div class="profile1">
     <form class="" action="/profile" method="post">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<%= name %>">
+        <input type="text" id="name" name="name" value="<%= name %>" required>
     
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value=<%= email%>>
+        <input type="email" id="email" name="email" required value=<%= email%>>
     
         <label for="text">Mobile Number:</label>
-        <input type="text" id="Number" name="number" value=<%= num%>>
+        <input type="text" id="Number" name="number" required value=<%= num%>>
     
         <div>
           <a href="/updatePassword"><button type="button" name="Update Password">Update Password</button></a>
