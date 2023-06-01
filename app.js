@@ -6,31 +6,40 @@ const ejs = require("ejs");
 const _ = require("lodash");
 let alert = require('alert');
 const mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost:27017/blogging_platform");
+mongoose.connect("mongodb+srv://nexus01:SAgiCGUHH0u2ROzC@nexus0.3mczl6h.mongodb.net/blogging_project");
 
 const blogSchema = new mongoose.Schema({
     heading: String,
     body: String,
     name: String
   });
+
+const userSchema = new mongoose.Schema({
+    Id: String,
+    Name: String,
+    EmailId: String,
+    MobileNumber: String,
+    Password: String
+});
   
 const blogs = mongoose.model("blog", blogSchema);
+const users = mongoose.model("user", userSchema);
 
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "blogging_platform"
-});
+// var con = mysql.createConnection({
+//     host: "localhost",
+//     user: "root",
+//     password: "",
+//     database: "blogging_platform"
+// });
 
-con.connect(function(err){
-    if(err) throw err;
-});
+// con.connect(function(err){
+//     if(err) throw err;
+// });
 //To create a table SQL Command: CREATE TABLE users (Id varchar(255), Name varchar(255), EmailId varchar(255), MobileNumber varchar(255), Password varchar(255));
 
 let email, name, mobile_num, id, Blogs = [];
@@ -39,31 +48,54 @@ let email, name, mobile_num, id, Blogs = [];
 app.post("/", function(req, res){
     email = req.body.emailId;
     let password = req.body.password;
-  
-    var sql = 'SELECT Password, Name, MobileNumber, Id FROM users WHERE EmailId = ?';
-    con.query(sql, [email], function (err, result) {
-        if (err) throw err;
-        if(result.length==0){
-          alert("Email is not registered");
-          res.render("welcome", {route: "/register"});
-        }
-        else{
-          name=result[0].Name;
-          mobile_num=result[0].MobileNumber;
-          id = result[0].Id;
-          if(result[0].Password === password){
-            blogs.find().then((result)=>{
-                result.reverse();
-                res.render("dashboard", {title: name, blogs:result});
-            });
-          }
-          else {
-            alert("Wrong Password!");
+
+    users.find({EmailId: email}).then((result)=>{
+        if(!result.length){
+            alert("Email is not registered");
             res.render("welcome", {route: "/register"});
-          }
         }
+
+        else{
+            name=result[0].Name;
+            mobile_num=result[0].MobileNumber;
+            id = result[0].Id;
+            if(result[0].Password === password){
+              blogs.find().then((result)=>{
+                  result.reverse();
+                  res.render("dashboard", {title: name, blogs:result});
+              });
+            }
+            else {
+              alert("Wrong Password!");
+              res.render("welcome", {route: "/register"});
+            }
+          }
+    });
+  
+    // var sql = 'SELECT Password, Name, MobileNumber, Id FROM users WHERE EmailId = ?';
+    // con.query(sql, [email], function (err, result) {
+    //     if (err) throw err;
+    //     if(result.length==0){
+    //       alert("Email is not registered");
+    //       res.render("welcome", {route: "/register"});
+    //     }
+    //     else{
+    //       name=result[0].Name;
+    //       mobile_num=result[0].MobileNumber;
+    //       id = result[0].Id;
+    //       if(result[0].Password === password){
+    //         blogs.find().then((result)=>{
+    //             result.reverse();
+    //             res.render("dashboard", {title: name, blogs:result});
+    //         });
+    //       }
+    //       else {
+    //         alert("Wrong Password!");
+    //         res.render("welcome", {route: "/register"});
+    //       }
+    //     }
         
-      });
+    //   });
 
     
   
@@ -75,11 +107,22 @@ app.post("/register", function(req, res){
     let newEmail = req.body.emailId;
     let newPassword = req.body.password;
     let newID = Date.now().toString();
-    
-    var sql = "INSERT INTO `users` VALUES(?, ?, ?, ?, ?)";
-    con.query(sql, [newID, newName, newEmail, newMobile_Num, newPassword], function(err, result){
-       if(err) throw err;
+
+    const user = new users({
+        Id: newID,
+        Name: newName,
+        EmailId: newEmail,
+        MobileNumber: newMobile_Num,
+        Password: newPassword
+
     })
+
+    user.save();
+    
+    // var sql = "INSERT INTO `users` VALUES(?, ?, ?, ?, ?)";
+    // con.query(sql, [newID, newName, newEmail, newMobile_Num, newPassword], function(err, result){
+    //    if(err) throw err;
+    // })
     res.render("welcome", {route: "/register"});
 })
 
@@ -88,10 +131,30 @@ app.post("/profile", function(req, res){
     name = req.body.name;
     email= req.body.email;
     mobile_num=req.body.number;
-    var sql = 'UPDATE users SET Name = ?, EmailId = ?, MobileNumber = ?  WHERE Id = ?';
-    con.query(sql, [name, email, mobile_num, id], function (err, result) {
-      if (err) throw err;
-    });
+    // var sql = 'UPDATE users SET Name = ?, EmailId = ?, MobileNumber = ?  WHERE Id = ?';
+    // con.query(sql, [name, email, mobile_num, id], function (err, result) {
+    //   if (err) throw err;
+    // });
+
+    users.updateOne(
+        {Id: id},
+        {$set: {Name: name}}
+        ).then((result)=>{
+    })
+
+    users.updateOne(
+        {Id: id},
+        {$set: {EmailId: email}}
+        ).then((result)=>{
+
+    })
+
+    users.updateOne(
+        {Id: id},
+        {$set: {MobileNumber: mobile_num}}
+        ).then((result)=>{
+
+    })
 
     blogs.updateMany(
         {name: oldName},
@@ -106,21 +169,36 @@ app.post("/updatePassword", function(req, res){
     let oldPswd = req.body.oldPswd;
     let newPswd = req.body.newPswd;
 
-    var sql1 = `SELECT Name from users WHERE Password = ?`;
-    con.query(sql1, [oldPswd], function (err, result1) {
-        if (err) throw err;
-        if(result1.length === 0){
+    users.find({Password: oldPswd}).then((result)=>{
+        if(!result.length){
             alert("Old Password is incorrect, check once.");
             res.render("updatePassword", {title: name, name: name});
         }
         else{
-            var sql2 = 'UPDATE users SET Password = ? WHERE Id = ?';
-            con.query(sql2, [newPswd, id], function (err, result) {
-                if (err) throw err;
-            });
+            users.updateOne(
+                {Id: id},
+                {$set: {Password: newPswd}}
+                ).then((result)=>{
+            })
             res.redirect("/profile");
         }
-    });
+    })
+
+    // var sql1 = `SELECT Name from users WHERE Password = ?`;
+    // con.query(sql1, [oldPswd], function (err, result1) {
+    //     if (err) throw err;
+    //     if(result1.length === 0){
+    //         alert("Old Password is incorrect, check once.");
+    //         res.render("updatePassword", {title: name, name: name});
+    //     }
+    //     else{
+    //         var sql2 = 'UPDATE users SET Password = ? WHERE Id = ?';
+    //         con.query(sql2, [newPswd, id], function (err, result) {
+    //             if (err) throw err;
+    //         });
+    //         res.redirect("/profile");
+    //     }
+    // });
 })
 
 app.post("/writeBlog", function(req, res){
